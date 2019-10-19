@@ -60,10 +60,10 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="salt"
+            label="Salt"
+            name="salt"
+            autoComplete="salt"
             autoFocus
           />
           <TextField
@@ -72,7 +72,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Test Password"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -90,6 +90,17 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="hpassword"
+            label="Hashed Password"
+            type="hpassword"
+            id="hpassword"
+            autoComplete="h-password"
+          />
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
