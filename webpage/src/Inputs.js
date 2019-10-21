@@ -15,33 +15,52 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import forge from "node-forge";
 
 export default class Inputs extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      salt: "",
+      testPassword: "",
+      hashedPassword: ""
+    };
     this.handleSaltChange = this.handleSaltChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.hashing = this.hashing.bind(this);
   }
 
   handlePasswordChange = event => {
-    console.log(event.target.value);
     this.setState({
       testPassword: event.target.value
     });
+    console.log(event.target.value);
   };
 
   handleSaltChange = event => {
-    console.log(event.target.value);
     this.setState({
       salt: event.target.value
     });
+    console.log(event.target.value);
   };
 
   handleSubmit = event => {
+    event.preventDefault();
     console.log("submit");
     console.log(event.target);
-    event.preventDefault();
+  };
+
+  hashing = () => {
+    const md = forge.md.sha256.create();
+    const s = this.state.salt;
+    const p = this.state.testPassword;
+    md.update(p);
+    console.log(forge.util.encode64(md.digest().toHex()));
+    let hp = forge.util.encode64(md.digest().toHex());
+    this.setState({
+      hashedPassword: hp
+    });
   };
 
   render() {
@@ -55,26 +74,30 @@ export default class Inputs extends React.Component {
           <TextField
             required
             fullWidth
-            id="standard-required"
+            multiline
+            rowsMax="4"
+            id="salt"
             label="Salt"
             placeholder="Salt"
             margin="normal"
             variant="outlined"
             onChange={this.handleSaltChange}
-            value={this.state ? this.state.salt : ""}
+            value={this.state.salt}
             InputLabelProps={{ shrink: true }}
           />
 
           <TextField
             required
             fullWidth
-            id="outlined-password-input"
+            id="test-password-input"
             label="Test Password"
+            multiline
+            rowsMax="4"
             placeholder="Test Password"
             margin="normal"
             variant="outlined"
             onChange={this.handlePasswordChange}
-            value={this.state ? this.state.hashedPassword : ""}
+            value={this.state.testPassword}
             InputLabelProps={{ shrink: true }}
           />
           <Button
@@ -82,7 +105,7 @@ export default class Inputs extends React.Component {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={this.props.hashing}
+            onClick={this.hashing}
           >
             Hash It
           </Button>
@@ -90,7 +113,10 @@ export default class Inputs extends React.Component {
             fullWidth
             id="outlined-read-only-input"
             label="Hashed Password Value"
+            multiline
+            rowsMax="4"
             defaultValue="Hashed Password Value"
+            value={this.state ? this.state.hashedPassword : null}
             margin="normal"
             InputProps={{
               readOnly: true
